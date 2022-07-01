@@ -1,16 +1,15 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <NotionHome />
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import NotionHome from './components/NotionHome.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
+    NotionHome,
+  },
 }
 </script>
 
@@ -20,7 +19,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #0a1c2e;
   margin-top: 60px;
 }
 </style>
