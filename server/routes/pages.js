@@ -39,12 +39,21 @@ async function loadAllNotionPages() {
     database_id: databaseId,
 
     filter: {
-      property: 'Author',
-      multi_select: {
-        contains: 'Ian Herrington',
-      },
+      and: [
+        {
+          property: 'Author',
+          multi_select: {
+            is_not_empty: true,
+          },
+        },
+        {
+          property: 'Status',
+          select: {
+            equals: 'Finished',
+          },
+        },
+      ],
     },
-    sorts: [],
   })
   return response
 }

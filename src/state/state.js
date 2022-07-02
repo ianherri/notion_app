@@ -50,10 +50,16 @@ async function addPage(title) {
 const getPages = computed(() => state.value.page)
 
 const getPageContent = computed(() => {
+  const isParagraph = (b) => {
+    if (b.type == 'paragraph' && b.paragraph.rich_text.length > 0) {
+      return true
+    }
+  }
   let blocks = pagestate.value.pagecontent
-  pagestate.value.pagecontent = []
-  let result = blocks.filter((block) => block.type == 'paragraph' || 'image')
-
+  let result = blocks.filter(
+    (block) => block.type == 'image' || isParagraph(block)
+  )
+  console.log(`from getPageContent ${result}`)
   return result
 })
 
