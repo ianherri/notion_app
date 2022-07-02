@@ -7,10 +7,10 @@
       class="page-content"
     >
       <div v-if="contentBlock.type == 'image'">
-        <img :src="contentBlock.image.file.url" width="500" />
+        <img :src="contentBlock.image.file.url" />
       </div>
       <div v-else-if="contentBlock.type == 'paragraph'">
-        <h2>{{ contentBlock.paragraph.rich_text[0].text.content }}</h2>
+        <p>{{ contentBlock.paragraph.rich_text[0].plain_text }}</p>
       </div>
       <div v-else>
         <h2>nothin</h2>
@@ -54,24 +54,17 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.post {
+.page-content {
   padding: 20px;
   margin: 20px;
   border: 0.5px solid rgb(196, 196, 196);
   border-radius: 10px;
 }
-h3 {
-  margin: 40px 0 0;
+
+img {
+  max-width: 400px;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+p {
+  text-align: justify;
 }
 </style>
