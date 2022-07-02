@@ -1,15 +1,16 @@
 <template>
-  <NotionHome />
+  <div class="nav">
+    <router-link class="router" to="/">Home</router-link>
+    <router-link class="router" to="/pagelist">Page List</router-link>
+    <!-- <router-link to="/pagecontent">Page Content</router-link> -->
+  </div>
+  <router-view />
 </template>
 
 <script>
-import NotionHome from './components/NotionHome.vue'
-
 export default {
   name: 'App',
-  components: {
-    NotionHome,
-  },
+  components: {},
 }
 </script>
 
@@ -21,5 +22,25 @@ export default {
   text-align: center;
   color: #0a1c2e;
   margin-top: 60px;
+}
+
+.nav {
+  display: block;
+
+  margin: 20px;
+}
+
+.router {
+  width: fit-content;
+  margin: 10px;
+  padding: 2px 10px 2px 10px;
+  background-color: aqua;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.router:hover {
+  transition: ease-in-out 500ms;
+  background-color: coral;
 }
 </style>

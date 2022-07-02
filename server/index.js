@@ -22,8 +22,10 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 const pages = require('./routes/pages.js')
+const pagescontent = require('./routes/pagescontent')
 
 app.use('/pages', pages)
+app.use('/pagescontent', pagescontent)
 // database connection
 
 // run server
