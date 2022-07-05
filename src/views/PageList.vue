@@ -4,8 +4,7 @@
   <div class="posts" v-for="post in posts" :key="post.id">
     <div class="post">
       {{ `The page title is: ${post.properties.Name.title[0].plain_text}` }}
-      <div class="post-id">{{ post.id }}</div>
-      <button class="seeMoreButton" @click="onClickGetContent(post.id)">
+      <button class="see-more-button" @click="onClickGetContent(post.id)">
         See More
       </button>
     </div>
@@ -48,12 +47,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.router-class {
-  padding: 20px;
-  margin: 20px;
-  border: 0.5px solid rgb(196, 196, 196);
-  border-radius: 10px;
-}
 .posts {
   color: rgb(31, 62, 62);
 }
@@ -64,7 +57,7 @@ export default {
   border-radius: 10px;
 }
 
-.seeMoreButton {
+.see-more-button {
   width: fit-content;
   margin: 10px;
   padding: 2px 10px 2px 10px;
@@ -74,7 +67,7 @@ export default {
   border: none;
 }
 
-.seeMoreButton:hover {
+.see-more-button:hover {
   transition: ease-in-out 500ms;
   background-color: rgb(16, 188, 207);
   cursor: pointer;

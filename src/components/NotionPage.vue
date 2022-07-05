@@ -1,5 +1,8 @@
 <template>
   <h3>Notion Page Content</h3>
+  <button class="send-to-phone" @click.prevent="onClickSend(pagecontent)">
+    Send to Phone
+  </button>
   <div class="page-content-wrapper">
     <div
       v-for="contentBlock in pagecontent"
@@ -22,6 +25,7 @@
 <script>
 import { getPageContent, loadPageContent } from '../state/state.js'
 import { useRouter } from 'vue-router'
+import { postSMS } from '../services/EventService.js'
 
 // import { computed } from 'vue'
 
@@ -29,24 +33,33 @@ export default {
   name: 'NotionPage',
   setup() {
     const router = useRouter()
-
-    function onClickRetrievePageContent(param) {
+    function retrievePageContent(param) {
       loadPageContent(param)
-      console.log(`from onClickRetrievePageContent ${param}`)
+      console.log(`from retrievePageContent ${param}`)
       getPageContent
     }
 
     const pagecontent = getPageContent
 
+    async function onClickSend(pagecontent) {
+      let body = pagecontent.filter((block) => block.type == 'paragraph')
+      let text = body[0]
+      console.log(`from onClickSend ${text}`)
+      await postSMS({
+        body: text.paragraph.rich_text[0].plain_text,
+      })
+    }
+
     return {
       pagecontent,
-      onClickRetrievePageContent,
+      retrievePageContent,
       router,
+      onClickSend,
     }
   },
   created() {
     const param = this.$route.params.id
-    this.onClickRetrievePageContent(param)
+    this.retrievePageContent(param)
     console.log(`from created NotionPage.vue ${this.$route.params.id}`)
   },
 }
@@ -54,6 +67,21 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.send-to-phone {
+  width: fit-content;
+  margin: 10px;
+  padding: 2px 10px 2px 10px;
+  background-color: rgb(255, 191, 0);
+  text-decoration: none;
+  border-radius: 4px;
+  border: none;
+}
+
+.send-to-phone:hover {
+  transition: ease-in-out 500ms;
+  background-color: rgb(16, 188, 207);
+  cursor: pointer;
+}
 .page-content {
   padding: 20px;
   margin: 20px;

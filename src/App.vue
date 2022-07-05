@@ -2,7 +2,6 @@
   <div class="nav">
     <router-link class="router" to="/">Home</router-link>
     <router-link class="router" to="/pagelist">Page List</router-link>
-    <!-- <router-link to="/pagecontent">Page Content</router-link> -->
   </div>
   <router-view />
 </template>

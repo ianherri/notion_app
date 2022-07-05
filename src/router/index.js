@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import NotionHome from '../views/NotionHome.vue'
+import PageList from '../views/PageList.vue'
 import NotionPage from '../components/NotionPage.vue'
 import HomeView from '../views/HomeView.vue'
 
@@ -11,8 +11,8 @@ const routes = [
   },
   {
     path: '/pagelist',
-    name: 'NotionHome',
-    component: NotionHome,
+    name: 'PageList',
+    component: PageList,
   },
   {
     path: '/pagecontent/:id',

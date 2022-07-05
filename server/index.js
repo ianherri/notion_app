@@ -23,9 +23,11 @@ app.use(express.urlencoded({ extended: true }))
 
 const pages = require('./routes/pages.js')
 const pagescontent = require('./routes/pagescontent')
+const sms = require('./routes/sendsms.js')
 
 app.use('/pages', pages)
 app.use('/pagescontent', pagescontent)
+app.use('/sendsms', sms)
 // database connection
 
 // run server
