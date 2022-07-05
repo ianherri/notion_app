@@ -25,7 +25,8 @@
 <script>
 import { getPageContent, loadPageContent } from '../state/state.js'
 import { useRouter } from 'vue-router'
-import { postSMS } from '../services/EventService.js'
+import { selectRandomIndex } from '@/utils/index.js'
+// import { postSMS } from '../services/EventService.js'
 
 // import { computed } from 'vue'
 
@@ -43,11 +44,24 @@ export default {
 
     async function onClickSend(pagecontent) {
       let body = pagecontent.filter((block) => block.type == 'paragraph')
-      let text = body[0]
-      console.log(`from onClickSend ${text}`)
-      await postSMS({
-        body: text.paragraph.rich_text[0].plain_text,
-      })
+      let i = selectRandomIndex(body)
+      let text = body[i]
+
+      let textcontent = text.paragraph.rich_text[0].plain_text
+      while (textcontent.length < 300) {
+        if (i >= body.length - 1) {
+          break
+        } else {
+          i += 1
+          textcontent = textcontent.concat(
+            '...',
+            body[i].paragraph.rich_text[0].plain_text
+          )
+        }
+      }
+      /* await postSMS({
+        body: textcontent,
+      }) */
     }
 
     return {

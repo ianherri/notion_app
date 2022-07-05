@@ -18,6 +18,7 @@ const pagestate = ref({ pagecontent: [] })
 
 //------- utility to set new state -------
 function setPages(page) {
+  console.log(page.length)
   state.value.page = page
 }
 
@@ -35,6 +36,7 @@ async function loadPages() {
 async function loadPageContent(blockId) {
   console.log(`From loadPageContent ${blockId}`)
   const pagecontent = await getPagesContentEvent(blockId)
+
   setPageContent(pagecontent)
 }
 
