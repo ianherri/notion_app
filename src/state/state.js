@@ -5,7 +5,11 @@ It sets up a state variable
 We can import this anywhere we need access to state
 */
 
-import EventService from '@/services/EventService'
+import {
+  getPagesContentEvent,
+  getPagesEvent,
+  postPagesEvent,
+} from '@/services/EventService'
 import { ref, computed } from 'vue'
 
 // ----------- state variables ----------------
@@ -24,13 +28,13 @@ function setPageContent(pagecontent) {
 // ----------- fetchers ----------------
 // action to fetch new state from server
 async function loadPages() {
-  const page = await EventService.getPagesEvent()
+  const page = await getPagesEvent()
   setPages(page)
 }
 
 async function loadPageContent(blockId) {
   console.log(`From loadPageContent ${blockId}`)
-  const pagecontent = await EventService.getPagesContentEvent(blockId)
+  const pagecontent = await getPagesContentEvent(blockId)
   setPageContent(pagecontent)
 }
 
@@ -40,7 +44,7 @@ async function loadPageContent(blockId) {
 // maybe I should handle that elsewhere?
 async function addPage(title) {
   console.log(`from addPage ${title}`)
-  await EventService.postPagesEvent({
+  await postPagesEvent({
     content: title,
   })
   loadPages()
@@ -59,7 +63,7 @@ const getPageContent = computed(() => {
   let result = blocks.filter(
     (block) => block.type == 'image' || isParagraph(block)
   )
-  console.log(`from getPageContent ${result}`)
+  console.log(`from getPageContent ${result.length}`)
   return result
 })
 
