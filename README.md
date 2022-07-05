@@ -4,6 +4,9 @@
 ```
 npm install
 ```
+create .env file and add: 
+1. your notion API token
+1. your notion database id
 
 ### Compiles and hot-reloads for development
 ```
