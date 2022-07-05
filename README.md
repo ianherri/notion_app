@@ -5,8 +5,8 @@
 npm install
 ```
 create .env file and add: 
-1. your notion API token
-1. your notion database id
+1. NOTION_KEY = your notion API token
+1. NOTION_DATABASE_ID = your notion database id
 
 ### Compiles and hot-reloads for development
 ```
