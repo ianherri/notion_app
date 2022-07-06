@@ -14,12 +14,7 @@ import {
   getPageContent,
 } from '../state/state.js'
 import { selectRandomIndex } from '@/utils/index.js'
-
-// import { useRouter } from 'vue-router'
-
-// import { postSMS } from '../services/EventService.js'
-
-// import { computed } from 'vue'
+import { postSMS } from '../services/EventService.js'
 
 export default {
   name: 'SendRandText',
@@ -31,6 +26,7 @@ export default {
       const pages = await getPages
       let i = selectRandomIndex(pages.value) - 1
       let randompageId = pages.value[i].id
+      let title = pages.value[i].properties.Name.title[0].text.content
 
       await loadPageContent(randompageId)
 
@@ -39,13 +35,13 @@ export default {
       if (pagecontent.value.length > 0) {
         pagecontent
       } else {
-        return onClickPickRandomPage()
+        return onClickPickRandomPage
       }
 
-      sendRandomTextContent(pagecontent.value)
+      sendRandomTextContent(pagecontent.value, title)
     }
 
-    function sendRandomTextContent(page) {
+    function sendRandomTextContent(page, title) {
       let nonemptybody = page.filter((block) => block.type == 'paragraph')
 
       let i = selectRandomIndex(nonemptybody)
@@ -67,8 +63,10 @@ export default {
             nonemptybody[i].paragraph.rich_text[0].plain_text
           )
         }
-        console.log(textcontent)
       }
+      postSMS({
+        body: title.concat(': ', textcontent),
+      })
     }
 
     return { onClickPickRandomPage, sendRandomTextContent }
