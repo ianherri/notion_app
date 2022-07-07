@@ -7,6 +7,8 @@ This is the server that we make requests *to* from our axios http request in ser
 
 require('dotenv').config()
 
+const cron = require('node-cron')
+
 const express = require('express')
 const cors = require('cors')
 const port = process.env.PORT || 5000
@@ -34,4 +36,12 @@ app.use('/sendsms', sms)
 
 app.listen(port, () => {
   console.log(`server running at ${port}`)
+})
+
+const cronJob = (fn) => {
+  cron.schedule('* * * * *', fn)
+}
+
+cronJob(() => {
+  console.log('cron is running every minute')
 })

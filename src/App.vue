@@ -14,32 +14,41 @@ export default {
 </script>
 
 <style>
+body {
+  margin: 0;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #0a1c2e;
-  margin-top: 60px;
+  color: #130444;
+  min-height: 100vh;
+  background-color: #ffffff;
+  border: -10px;
 }
 
 .nav {
-  display: block;
+  display: flex;
 
-  margin: 20px;
+  background-color: antiquewhite;
+  width: 100%;
 }
 
 .router {
   width: fit-content;
+  color: #130444;
   margin: 10px;
   padding: 2px 10px 2px 10px;
-  background-color: aqua;
-  text-decoration: none;
+  background-color: antiquewhite;
+  text-decoration: underline rgba(0, 0, 0, 0);
+  transition: text-decoration-color 300ms;
   border-radius: 4px;
 }
 
 .router:hover {
   transition: ease-in-out 500ms;
-  background-color: coral;
+  text-decoration-color: #0a1c2e;
 }
 </style>

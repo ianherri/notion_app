@@ -28,6 +28,8 @@ function setPageContent(pagecontent) {
 
 // ----------- fetchers ----------------
 // action to fetch new state from server
+// this is where the state begins
+// it retrieves data from database then calls set.... to set state
 async function loadPages() {
   const page = await getPagesEvent()
   setPages(page)
@@ -39,8 +41,6 @@ async function loadPageContent(blockId) {
 
   setPageContent(pagecontent)
 }
-
-// ----------- setters ----------------
 
 // this is working but it's not updating state
 // maybe I should handle that elsewhere?
@@ -65,7 +65,6 @@ const getPageContent = computed(() => {
   let result = blocks.filter(
     (block) => block.type == 'image' || isParagraph(block)
   )
-  console.log(`from getPageContent ${result.length}`)
   return result
 })
 

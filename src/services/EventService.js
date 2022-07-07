@@ -7,8 +7,11 @@ import axios from 'axios'
 
 async function postPagesEvent(title) {
   // i think the title is being transformed here
-  let res = await axios.post('http://localhost:3000/pages', title)
-  console.log(`postPagesEvent ${title}`)
+  let res = await axios
+    .post('http://localhost:3000/pages', title)
+    .catch((error) => {
+      console.log(error.toJSON())
+    })
   return res.data
 }
 
@@ -19,9 +22,8 @@ async function postSMS(body) {
 
 async function getPagesEvent() {
   let res = await axios.get('http://localhost:3000/pages').catch((error) => {
-    console.log(error)
+    console.log(error.toJSON())
   })
-  console.log(`getPagesEvent ${res.data.length}`)
   return res.data
 }
 
@@ -29,7 +31,7 @@ async function getPagesContentEvent(blockId) {
   let res = await axios
     .get(`http://localhost:3000/pagescontent?blockId=${blockId}`)
     .catch((error) => {
-      console.log(error)
+      console.log(error.toJSON())
     })
   return res.data
 }
