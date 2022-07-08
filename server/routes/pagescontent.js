@@ -16,14 +16,14 @@ const notion = new Client({ auth: process.env.NOTION_KEY })
 // get pages content
 
 router.get('/', async (req, res) => {
-  let blockId = req.query.blockId
-  const pagecontent = await loadPageContent(blockId)
+  let id = req.query.id
+  const pagecontent = await loadPageContent(id)
   res.send(await pagecontent.results)
 })
 
-async function loadPageContent(blockId) {
+async function loadPageContent(id) {
   const response = await notion.blocks.children.list({
-    block_id: blockId,
+    block_id: id,
     page_size: 50,
   })
   return response

@@ -15,7 +15,7 @@ const routes = [
     component: PageList,
   },
   {
-    path: '/pagecontent/:id',
+    path: '/pagescontent/:id',
     name: 'NotionPage',
     component: NotionPage,
   },
