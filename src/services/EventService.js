@@ -3,6 +3,8 @@ This service just calls the api we made using axios to make a get request to the
 We call this event service in our state mgmt component
 */
 
+// TODO: move the api urls to environment variables, or other variables that can be globally changed
+
 import axios from 'axios'
 
 async function postPagesEvent(title) {
@@ -20,6 +22,7 @@ async function postSMS(body) {
   return res.data
 }
 
+// returns list of page objects
 async function getPagesEvent() {
   let res = await axios.get('http://localhost:3000/pages').catch((error) => {
     console.log(error.toJSON())
@@ -27,9 +30,9 @@ async function getPagesEvent() {
   return res.data
 }
 
-async function getPagesContentEvent(blockId) {
+async function getPagesContentEvent(id) {
   let res = await axios
-    .get(`http://localhost:3000/pagescontent?blockId=${blockId}`)
+    .get(`http://localhost:3000/pagescontent?id=${id}`)
     .catch((error) => {
       console.log(error.toJSON())
     })

@@ -1,19 +1,23 @@
 <template>
   <h3>Notion Page Content</h3>
-  <button class="send-to-phone" @click.prevent="onClickSend(pagecontent)">
+  <button
+    class="send-to-phone"
+    @click.prevent="onClickSend(filterPage.content)"
+  >
     Send to Phone
   </button>
   <div class="page-content-wrapper">
+    <h3>Title: {{ filterPage.name }}</h3>
     <div
-      v-for="contentBlock in pagecontent"
-      :key="contentBlock.id"
+      v-for="block in filterPage.content"
+      :key="block.id"
       class="page-content"
     >
-      <div v-if="contentBlock.type == 'image'">
-        <img :src="contentBlock.image.file.url" />
+      <div v-if="block.type == 'image'">
+        <img :src="block.image.file.url" />
       </div>
-      <div v-else-if="contentBlock.type == 'paragraph'">
-        <p>{{ contentBlock.paragraph.rich_text[0].plain_text }}</p>
+      <div v-else-if="block.type == 'paragraph'">
+        <p>{{ block.paragraph.rich_text[0].plain_text }}</p>
       </div>
       <div v-else>
         <h2>nothin</h2>
@@ -23,24 +27,27 @@
 </template>
 
 <script>
-import { getPageContent, loadPageContent } from '../state/state.js'
-import { useRouter } from 'vue-router'
+import { getPages, loadPages } from '../state/staterefactor.js'
+import { useRoute } from 'vue-router'
 import { selectRandomIndex } from '@/utils/index.js'
-// import { postSMS } from '../services/EventService.js'
-
-// import { computed } from 'vue'
+import { postSMS } from '../services/EventService.js'
 
 export default {
   name: 'NotionPage',
+  created() {
+    loadPages(), getPages
+  },
   setup() {
-    const router = useRouter()
-    function retrievePageContent(param) {
-      loadPageContent(param)
-      console.log(`from retrievePageContent ${param}`)
-      getPageContent
-    }
+    const router = useRoute()
+    console.log(router.params.id)
 
-    const pagecontent = getPageContent
+    const pages = getPages.value
+    // TODO: fix the bug where a page refreshes causes all the data to go missing
+    const filterPage = pages.value.filter(
+      (page) => page.id == router.params.id
+    )[0]
+
+    console.log(filterPage)
 
     async function onClickSend(pagecontent) {
       let body = pagecontent.filter((block) => block.type == 'paragraph')
@@ -59,22 +66,15 @@ export default {
           )
         }
       }
-      /* await postSMS({
+      await postSMS({
         body: textcontent,
-      }) */
+      })
     }
 
     return {
-      pagecontent,
-      retrievePageContent,
-      router,
       onClickSend,
+      filterPage,
     }
-  },
-  created() {
-    const param = this.$route.params.id
-    this.retrievePageContent(param)
-    console.log(`from created NotionPage.vue ${this.$route.params.id}`)
   },
 }
 </script>

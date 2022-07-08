@@ -3,7 +3,8 @@
   <p>Try clicking to see more...</p>
   <div class="posts" v-for="post in posts" :key="post.id">
     <div class="post">
-      {{ `The page title is: ${post.properties.Name.title[0].plain_text}` }}
+      {{ `The page title is: ${post.name}` }}
+      {{ post.id }}
       <button class="see-more-button" @click="onClickGetContent(post.id)">
         See More
       </button>
@@ -18,7 +19,7 @@
 </template>
 
 <script>
-import { getPages, loadPages, addPage } from '@/state/state.js'
+import { getPages, loadPages, addPage } from '@/state/staterefactor.js'
 import { useRouter } from 'vue-router'
 
 export default {
@@ -28,13 +29,14 @@ export default {
   },
   setup() {
     const router = useRouter()
-    const posts = getPages
+    const posts = getPages.value
+
     function onClickAdd(title) {
       addPage(title)
       console.log(`from onClickAdd ${title}`)
     }
     function onClickGetContent(id) {
-      router.push(`/pagecontent/${id}`)
+      router.push(`/pagescontent/${id}`)
     }
     return {
       posts,

@@ -1,21 +1,18 @@
 <template>
   <div>
-    <button class="send-to-phone" @click.prevent="onClickPickRandomPage(pages)">
+    <button class="send-to-phone" @click.prevent="onClickPickRandomPage()">
       Send Data to Phone
     </button>
   </div>
 </template>
 
 <script>
-import {
-  getPages,
-  loadPages,
-  loadPageContent,
-  getPageContent,
-} from '../state/state.js'
+import { getPages, loadPages } from '../state/staterefactor.js'
 import { selectRandomIndex } from '@/utils/index.js'
-import { postSMS } from '../services/EventService.js'
 
+//import { postSMS } from '../services/EventService.js'
+
+// TODO: Figure out why state doesn't load on first try.....
 export default {
   name: 'SendRandText',
   created() {
@@ -23,53 +20,39 @@ export default {
   },
   setup() {
     async function onClickPickRandomPage() {
-      const pages = await getPages
-      let i = selectRandomIndex(pages.value) - 1
-      let randompageId = pages.value[i].id
-      let title = pages.value[i].properties.Name.title[0].text.content
+      await loadPages().then(async () => {
+        const pages = getPages
 
-      await loadPageContent(randompageId)
+        let pageIndex = selectRandomIndex(pages.value.value)
 
-      const pagecontent = await getPageContent
+        const randomPage = pages.value.value[pageIndex]
 
-      if (pagecontent.value.length > 0) {
-        pagecontent
-      } else {
-        return onClickPickRandomPage
-      }
+        let nonemptybody = randomPage.content.filter(
+          (block) => block.type == 'paragraph'
+        )
+        let i = selectRandomIndex(nonemptybody)
+        let text = nonemptybody[i]
+        let textcontent = text.paragraph.rich_text[0].plain_text
 
-      sendRandomTextContent(pagecontent.value, title)
-    }
-
-    function sendRandomTextContent(page, title) {
-      let nonemptybody = page.filter((block) => block.type == 'paragraph')
-
-      let i = selectRandomIndex(nonemptybody)
-
-      let text = nonemptybody[i]
-
-      let textcontent =
-        text.paragraph.rich_text.length > 0
-          ? text.paragraph.rich_text[0].plain_text
-          : 'empty entry'
-
-      while (textcontent.length < 300) {
-        if (i >= nonemptybody.length - 1) {
-          break
-        } else {
-          i += 1
-          textcontent = textcontent.concat(
-            '...',
-            nonemptybody[i].paragraph.rich_text[0].plain_text
-          )
+        while (textcontent.length < 300) {
+          if (i >= nonemptybody.length - 1) {
+            break
+          } else {
+            i += 1
+            textcontent = textcontent.concat(
+              '...',
+              nonemptybody[i].paragraph.rich_text[0].plain_text
+            )
+          }
         }
-      }
-      postSMS({
-        body: title.concat(': ', textcontent),
+        console.log(randomPage.name, textcontent)
+        /* await postSMS({
+          body: randomPage.name.concat(': ', textcontent),
+        }) */
       })
     }
 
-    return { onClickPickRandomPage, sendRandomTextContent }
+    return { onClickPickRandomPage }
   },
 }
 </script>
