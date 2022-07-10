@@ -24,12 +24,14 @@ import { useRouter } from 'vue-router'
 
 export default {
   name: 'NotionHome',
-  created() {
+  /*  created() {
     loadPages()
-  },
+  }, */
   setup() {
+    loadPages()
     const router = useRouter()
     const posts = getPages.value
+    console.log(posts)
 
     function onClickAdd(title) {
       addPage(title)
