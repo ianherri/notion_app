@@ -27,21 +27,19 @@
 </template>
 
 <script>
-import { getPages, loadPages } from '../state/staterefactor.js'
+import { getPages } from '../state/staterefactor.js'
 import { useRoute } from 'vue-router'
 import { selectRandomIndex } from '@/utils/index.js'
 import { postSMS } from '../services/EventService.js'
 
 export default {
   name: 'NotionPage',
-  created() {
-    loadPages(), getPages
-  },
   setup() {
+    console.log('does this run setuup')
     const router = useRoute()
     console.log(router.params.id)
-
     const pages = getPages.value
+    console.log(pages)
     // TODO: fix the bug where a page refreshes causes all the data to go missing
     const filterPage = pages.value.filter(
       (page) => page.id == router.params.id
