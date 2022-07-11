@@ -1,14 +1,19 @@
 <template>
   <h3>Notion Pages</h3>
   <p>Try clicking to see more...</p>
-  <div class="posts" v-for="post in posts" :key="post.id">
-    <div class="post">
-      {{ `The page title is: ${post.name}` }}
-      {{ post.id }}
-      <button class="see-more-button" @click="onClickGetContent(post.id)">
-        See More
-      </button>
+  <div v-if="loaded" class="page-list-wrapper">
+    <div class="posts" v-for="page in pages" :key="page.id">
+      <div class="post">
+        {{ `The page title is: ${page.name}` }}
+        {{ page.id }}
+        <button class="see-more-button" @click="onClickGetContent(page.id)">
+          See More
+        </button>
+      </div>
     </div>
+  </div>
+  <div v-else>
+    <h3>Loading...</h3>
   </div>
   <div class="add-post">
     <form action="submit">
@@ -18,34 +23,28 @@
   </div>
 </template>
 
-<script>
-import { getPages, loadPages, addPage } from '@/state/staterefactor.js'
+<script setup>
+import useState from '@/composables/state.js'
 import { useRouter } from 'vue-router'
+import { onMounted } from 'vue'
 
-export default {
-  name: 'NotionHome',
-  /*  created() {
-    loadPages()
-  }, */
-  setup() {
-    loadPages()
-    const router = useRouter()
-    const posts = getPages.value
-    console.log(posts)
+const router = useRouter()
+const { pages, addPage, loaded } = useState()
 
-    function onClickAdd(title) {
-      addPage(title)
-      console.log(`from onClickAdd ${title}`)
-    }
-    function onClickGetContent(id) {
-      router.push(`/pagescontent/${id}`)
-    }
-    return {
-      posts,
-      onClickAdd,
-      onClickGetContent,
-    }
-  },
+console.log(pages)
+
+onMounted(() => {
+  setTimeout(() => {
+    console.log(pages.value)
+  }, 5000)
+})
+
+function onClickAdd(title) {
+  addPage(title)
+  console.log(`from onClickAdd ${title}`)
+}
+function onClickGetContent(id) {
+  router.push(`/pagescontent/${id}`)
 }
 </script>
 

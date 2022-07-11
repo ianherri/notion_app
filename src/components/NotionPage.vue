@@ -2,14 +2,14 @@
   <h3>Notion Page Content</h3>
   <button
     class="send-to-phone"
-    @click.prevent="onClickSend(filterPage.content)"
+    @click.prevent="onClickSend(singlePageContent.content)"
   >
     Send to Phone
   </button>
-  <div class="page-content-wrapper">
-    <h3>Title: {{ filterPage.name }}</h3>
+  <div v-if="singlePageContent" class="page-content-wrapper">
+    <h3>Title: {{ singlePageContent.name }}</h3>
     <div
-      v-for="block in filterPage.content"
+      v-for="block in singlePageContent.content"
       :key="block.id"
       class="page-content"
     >
@@ -17,63 +17,56 @@
         <img :src="block.image.file.url" />
       </div>
       <div v-else-if="block.type == 'paragraph'">
-        <p>{{ block.paragraph.rich_text[0].plain_text }}</p>
-      </div>
-      <div v-else>
-        <h2>nothin</h2>
+        <p>{{ block.paragraph.rich_text[0].text.content }}</p>
       </div>
     </div>
   </div>
+  <div v-else>
+    <h3>Loading...</h3>
+  </div>
 </template>
 
-<script>
-import { getPages } from '../state/staterefactor.js'
+<script setup>
+import useState from '@/composables/state'
 import { useRoute } from 'vue-router'
 import { selectRandomIndex } from '@/utils/index.js'
-import { postSMS } from '../services/EventService.js'
+import { postSMS } from '@/services/EventService.js'
+import { watch, ref } from 'vue'
 
-export default {
-  name: 'NotionPage',
-  setup() {
-    console.log('does this run setuup')
-    const router = useRoute()
-    console.log(router.params.id)
-    const pages = getPages.value
-    console.log(pages)
-    // TODO: fix the bug where a page refreshes causes all the data to go missing
-    const filterPage = pages.value.filter(
-      (page) => page.id == router.params.id
-    )[0]
+const router = useRoute()
+const { pages } = useState()
+const singlePageContent = ref(
+  pages.value.filter((page) => page.id === router.params.id)[0]
+)
 
-    console.log(filterPage)
+console.log(singlePageContent.value)
 
-    async function onClickSend(pagecontent) {
-      let body = pagecontent.filter((block) => block.type == 'paragraph')
-      let i = selectRandomIndex(body)
-      let text = body[i]
+watch(pages, (newPages) => {
+  singlePageContent.value = newPages.filter(
+    (page) => page.id === router.params.id
+  )[0]
+})
 
-      let textcontent = text.paragraph.rich_text[0].plain_text
-      while (textcontent.length < 300) {
-        if (i >= body.length - 1) {
-          break
-        } else {
-          i += 1
-          textcontent = textcontent.concat(
-            '...',
-            body[i].paragraph.rich_text[0].plain_text
-          )
-        }
-      }
-      await postSMS({
-        body: textcontent,
-      })
+async function onClickSend(pagecontent) {
+  let body = pagecontent.filter((block) => block.type == 'paragraph')
+  let i = selectRandomIndex(body)
+  let text = body[i]
+
+  let textcontent = text.paragraph.rich_text[0].plain_text
+  while (textcontent.length < 300) {
+    if (i >= body.length - 1) {
+      break
+    } else {
+      i += 1
+      textcontent = textcontent.concat(
+        '...',
+        body[i].paragraph.rich_text[0].plain_text
+      )
     }
-
-    return {
-      onClickSend,
-      filterPage,
-    }
-  },
+  }
+  await postSMS({
+    body: textcontent,
+  })
 }
 </script>
 

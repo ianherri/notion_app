@@ -10,20 +10,20 @@ import {
   getPagesEvent,
   postPagesEvent,
 } from '@/services/EventService'
-import { ref, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 
 // ----------- state variables ----------------
-const state = ref([{ id: '', name: '', content: [] }])
-
+const pages = ref([{ id: '', name: '', content: [] }])
+const loaded = ref(false)
 // STEP 1:
 //--------- fetchers ----------------
 // action to fetch new state from axios server @ EventService.js
 // this is where the state begins
 // it retrieves data from database then calls set.... to set state
 async function loadPages() {
-  await getPagesEvent().then((pages) => {
-    setPages(pages)
-  })
+  const newPages = await getPagesEvent()
+
+  await setPages(newPages)
 }
 
 async function loadPageContent(id) {
@@ -62,36 +62,63 @@ async function addPage(title) {
   await postPagesEvent({
     content: title,
   })
-  loadPages()
+  await loadPages()
 }
 
 // STEP 2:
 //---------- setters -------------
-function setPages(pages) {
-  const idList = pages.map((page) => ({
+async function setPages(newPages) {
+  const idList = newPages.map((page) => ({
     id: page.id,
     name: page.properties.Name.title[0].plain_text,
   }))
+  return await resolvePages(idList)
+}
 
-  return resolvePages(idList)
+async function getElementContent(element) {
+  const content = await loadPageContent(element.id)
+  return {
+    id: element.id,
+    name: element.name,
+    content,
+  }
 }
 
 async function resolvePages(idList) {
-  state.value = await Promise.all(
-    idList.map(async (element) => ({
-      id: element.id,
-      name: element.name,
-      content: await loadPageContent(element.id),
-    }))
-  )
-  return state
+  const pagePromises = idList.map(getElementContent)
+  pages.value = await Promise.all(pagePromises)
+  return pages
 }
+
+/* async function filterPages(id) {
+  onMounted(async () => {
+    if (!loaded.value) {
+      await loadPages()
+      loaded.value = true
+    }
+    const filteredPage = pages.value.filter((page) => page.id == id)[0]
+    console.log(`from filterPage function ${loaded.value}`)
+    console.log(`from filterPage function ${filteredPage.content}`)
+    return filteredPage
+  })
+} */
 
 // STEP 3:
 // ----------- getters ----------------
 // "ref has a .value property that you use to get its content. Not required when referencing from template
-const getPages = computed(() => {
-  return state
-})
 
-export { getPages, loadPages, addPage }
+/**
+ * Composable function of app state
+ *
+ * @returns {*} app state
+ */
+export default function useState() {
+  onMounted(async () => {
+    if (!loaded.value) {
+      await loadPages()
+      loaded.value = true
+    }
+  })
+
+  return { pages, loadPages, addPage, loaded }
+}
