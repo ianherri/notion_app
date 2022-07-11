@@ -27,6 +27,7 @@ async function getPagesEvent() {
   let res = await axios.get('http://localhost:3000/pages').catch((error) => {
     console.log(error.toJSON())
   })
+
   return res.data
 }
 

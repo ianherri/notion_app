@@ -3,7 +3,7 @@
   <p>Cool stuff coming soon...</p>
   <p>Try navigating to the page list</p>
 
-  <SendRandText />
+  <!-- <SendRandText /> -->
   <h3>Cron Options</h3>
   <p>Select your text frequency below:</p>
   <form class="cron-input">
@@ -20,9 +20,9 @@
 </template>
 
 <script>
-import SendRandText from '@/components/SendRandText.vue'
+// import SendRandText from '@/components/SendRandText.vue'
 export default {
-  components: { SendRandText },
+  // components: { SendRandText },
   setup() {
     const cronIntervalOptions = [
       { id: 0, interval: '12 hours' },

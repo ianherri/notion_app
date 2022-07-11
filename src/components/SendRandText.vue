@@ -7,22 +7,20 @@
 </template>
 
 <script>
-import { getPages, loadPages } from '../state/staterefactor.js'
+import useState from '@/composables/state.js'
 import { selectRandomIndex } from '@/utils/index.js'
 
-//import { postSMS } from '../services/EventService.js'
+import { postSMS } from '../services/EventService.js'
 
 // TODO: Figure out why state doesn't load on first try.....
 export default {
   name: 'SendRandText',
-  created() {
-    loadPages()
-  },
+
   setup() {
+    const { pages, loadPages } = useState()
+
     async function onClickPickRandomPage() {
       await loadPages().then(async () => {
-        const pages = getPages
-
         let pageIndex = selectRandomIndex(pages.value.value)
 
         const randomPage = pages.value.value[pageIndex]
@@ -46,9 +44,9 @@ export default {
           }
         }
         console.log(randomPage.name, textcontent)
-        /* await postSMS({
+        await postSMS({
           body: randomPage.name.concat(': ', textcontent),
-        }) */
+        })
       })
     }
 
