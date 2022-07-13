@@ -27,9 +27,10 @@ router.get('/', async (req, res) => {
 // createNewpage function which communicates with our backend.
 // then responds to the requestor with a status
 
+// use req.body.field_name to access
+
 router.post('/', async (req, res) => {
-  // for some reason the request is an object with the actual value i want to transmit as they key, and an empty string value like this {'thing I want to send': ''}
-  console.log(`from router.post ${req.body}`)
+  console.log(`from router.post ${req.body.content}`)
   await createNewPage(req.body.content)
   res.status(201).send()
 })
@@ -39,20 +40,10 @@ async function loadAllNotionPages() {
     database_id: databaseId,
 
     filter: {
-      and: [
-        {
-          property: 'Author',
-          multi_select: {
-            is_not_empty: true,
-          },
-        },
-        {
-          property: 'Status',
-          select: {
-            equals: 'Finished',
-          },
-        },
-      ],
+      property: 'Author',
+      multi_select: {
+        is_not_empty: true,
+      },
     },
   })
   return response
@@ -71,7 +62,6 @@ async function createNewPage(title) {
           {
             type: 'text',
             text: {
-              // error here?
               content: title,
               link: null,
             },

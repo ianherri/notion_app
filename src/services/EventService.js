@@ -9,6 +9,7 @@ import axios from 'axios'
 
 async function postPagesEvent(title) {
   // i think the title is being transformed here
+  console.log(`from postpages event ${title.body}`)
   let res = await axios
     .post('http://localhost:3000/pages', title)
     .catch((error) => {
@@ -18,11 +19,14 @@ async function postPagesEvent(title) {
 }
 
 async function postSMS(body) {
-  let res = await axios.post('http://localhost:3000/sendsms', body)
+  let res = await axios.post('http://localhost:3000/sms', body)
   return res.data
 }
 
-// returns list of page objects
+/**
+ *
+ * @returns list of pages from a database
+ */
 async function getPagesEvent() {
   let res = await axios.get('http://localhost:3000/pages').catch((error) => {
     console.log(error.toJSON())
@@ -31,6 +35,10 @@ async function getPagesEvent() {
   return res.data
 }
 
+/**
+ *
+ * @returns list of child blocks of parent block/page using id
+ */
 async function getPagesContentEvent(id) {
   let res = await axios
     .get(`http://localhost:3000/pagescontent?id=${id}`)
