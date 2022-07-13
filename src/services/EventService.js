@@ -19,7 +19,7 @@ async function postPagesEvent(title) {
 }
 
 async function postSMS(body) {
-  let res = await axios.post('http://localhost:3000/sms', body)
+  let res = await axios.post(`http://localhost:3000/sms?id=${body.id}`, body)
   return res.data
 }
 
@@ -47,5 +47,7 @@ async function getPagesContentEvent(id) {
     })
   return res.data
 }
+
+// TODO: event that use patch endpoint at SMS
 
 export { getPagesContentEvent, getPagesEvent, postPagesEvent, postSMS }

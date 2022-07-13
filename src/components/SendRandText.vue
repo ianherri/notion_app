@@ -13,7 +13,7 @@
 <script setup>
 import useState from '@/composables/state.js'
 import { selectRandomIndex } from '@/utils/index.js'
-// import { postSMS } from '../services/EventService.js'
+import { postSMS } from '../services/EventService.js'
 
 const { pages, loaded } = useState()
 
@@ -40,10 +40,9 @@ function onClickPickRandomPage() {
   let textOnlyContent = randomPage.content.filter(
     (block) => block.type === 'paragraph'
   )
-  console.log(textOnlyContent)
   let i = selectRandomIndex(textOnlyContent)
-  let text = textOnlyContent[i]
-  let textcontent = text.paragraph.rich_text[0].text.content
+  let textcontent = textOnlyContent[i].paragraph.rich_text[0].text.content
+  let replyBlockId = textOnlyContent[i].id
 
   while (textcontent.length < 300) {
     if (i >= textOnlyContent.length - 1) {
@@ -55,11 +54,12 @@ function onClickPickRandomPage() {
         textOnlyContent[i].paragraph.rich_text[0].text.content
       )
     }
+    replyBlockId = textOnlyContent[i].id
   }
-  console.log(randomPage.name, textcontent)
-  /* await postSMS({
+  postSMS({
     body: randomPage.name.concat(': ', textcontent),
-  }) */
+    id: replyBlockId,
+  })
 }
 </script>
 

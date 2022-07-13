@@ -16,7 +16,9 @@ router.post('/', async (req, res) => {
   res.status(201).send()
 })
 
+// @SHANE - the id is also here in case this is easier to store
 async function sendNewSMS(text) {
+  const replyId = text.replyId
   const response = await client.messages
     .create({
       body: text.body,
@@ -24,14 +26,7 @@ async function sendNewSMS(text) {
       to: '+16037241036',
     })
     .then((message) => console.log(message.sid))
-  return response
+  return { response, replyId }
 }
-
-// receive SMS
-
-client
-  .incomingPhoneNumbers('+16037241036')
-  .update({ smsUrl: 'https://test-1337.twil.io/my-test-function' })
-  .then((phoneNumber) => console.log(phoneNumber.smsUrl))
 
 module.exports = router
