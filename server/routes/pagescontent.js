@@ -29,4 +29,41 @@ async function loadPageContent(id) {
   return response
 }
 
+// add child block given block_id
+
+router.patch('/', async (req, res) => {
+  let id = req.query.id
+  await createNewBlock(req.body.content, id)
+  res.status(201).send()
+})
+
+async function createNewBlock(content, id) {
+  const blockId = id
+  const response = await notion.blocks.children.append({
+    block_id: blockId,
+    children: [
+      {
+        paragraph: {
+          rich_text: [
+            {
+              text: {
+                content: `${content} [added via SMS]`,
+              },
+              annotations: {
+                bold: false,
+                italic: true,
+                strikethrough: false,
+                underline: false,
+                code: false,
+                color: 'green',
+              },
+            },
+          ],
+        },
+      },
+    ],
+  })
+  console.log(response)
+}
+
 module.exports = router

@@ -1,8 +1,6 @@
 /* 
-This is our simple state mgmt code
-It calls the Event Service to retrieve data from backend
-It sets up a state variable
-We can import this anywhere we need access to state
+Simple state mgmt code calls the Event Service to retrieve data from backend.
+Import this anywhere we need access to state
 */
 
 import {
@@ -11,50 +9,60 @@ import {
   postPagesEvent,
 } from '@/services/EventService'
 import { ref, onMounted } from 'vue'
+import { isParagraph, filterForNonEmptyText } from '../utils/index'
 
 // ----------- state variables ----------------
 const pages = ref([{ id: '', name: '', content: [] }])
 const loaded = ref(false)
-// STEP 1:
-//--------- fetchers ----------------
-// action to fetch new state from axios server @ EventService.js
-// this is where the state begins
-// it retrieves data from database then calls set.... to set state
+
 async function loadPages() {
   const newPages = await getPagesEvent()
-
   await setPages(newPages)
 }
 
-async function loadPageContent(id) {
-  function isParagraph(block) {
-    if (block.type == 'paragraph' && block.paragraph.rich_text.length > 0) {
-      return true
-    }
-    return false
-  }
-  // returns list of blocks for single block id
-  const pagecontent = await getPagesContentEvent(id)
-    .then((blocks) => {
-      return blocks.filter(
-        (block) => block.type == 'image' || isParagraph(block)
-      )
-    })
-    .catch((error) => console.log(error))
+async function setPages(newPages) {
+  const idList = newPages.map((page) => ({
+    id: page.id,
+    name: page.properties.Name.title[0].text.content,
+  }))
+  return await resolvePages(idList)
+}
 
-  // filter for empty pagecontent
-  if (pagecontent.length == 0) {
-    const dummyContent = [
-      {
-        type: 'paragraph',
-        paragraph: {
-          rich_text: [{ plain_text: 'no content' }],
-        },
-      },
-    ]
-    return dummyContent
+async function resolvePages(idList) {
+  const pagePromises = idList.map(getPageContent)
+  pages.value = await Promise.all(pagePromises)
+  return pages
+}
+
+async function getPageContent(page) {
+  const content = await loadPageContent(page.id)
+  return {
+    id: page.id,
+    name: page.name,
+    content,
   }
-  return pagecontent
+}
+
+/*
+@returns text and image content from child blocks of single given parent element id
+*/
+// TODO: support all text content types: callout blocks, etc.
+// https://developers.notion.com/reference/block
+
+async function loadPageContent(id) {
+  const flat = []
+  const pageContent = await getPagesContentEvent(id)
+
+  for (let block of pageContent) {
+    if (block.has_children) {
+      const result = await loadPageContent(block.id)
+      flat.push(block, ...result)
+    } else flat.push(block)
+  }
+
+  return filterForNonEmptyText(
+    flat.filter((block) => block.type === 'image' || isParagraph(block))
+  )
 }
 
 async function addPage(title) {
@@ -64,48 +72,6 @@ async function addPage(title) {
   })
   await loadPages()
 }
-
-// STEP 2:
-//---------- setters -------------
-async function setPages(newPages) {
-  const idList = newPages.map((page) => ({
-    id: page.id,
-    name: page.properties.Name.title[0].plain_text,
-  }))
-  return await resolvePages(idList)
-}
-
-async function getElementContent(element) {
-  const content = await loadPageContent(element.id)
-  return {
-    id: element.id,
-    name: element.name,
-    content,
-  }
-}
-
-async function resolvePages(idList) {
-  const pagePromises = idList.map(getElementContent)
-  pages.value = await Promise.all(pagePromises)
-  return pages
-}
-
-/* async function filterPages(id) {
-  onMounted(async () => {
-    if (!loaded.value) {
-      await loadPages()
-      loaded.value = true
-    }
-    const filteredPage = pages.value.filter((page) => page.id == id)[0]
-    console.log(`from filterPage function ${loaded.value}`)
-    console.log(`from filterPage function ${filteredPage.content}`)
-    return filteredPage
-  })
-} */
-
-// STEP 3:
-// ----------- getters ----------------
-// "ref has a .value property that you use to get its content. Not required when referencing from template
 
 /**
  * Composable function of app state
@@ -120,5 +86,5 @@ export default function useState() {
     }
   })
 
-  return { pages, loadPages, addPage, loaded }
+  return { pages, loadPages, addPage, loaded, loadPageContent }
 }

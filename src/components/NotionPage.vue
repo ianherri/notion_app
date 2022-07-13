@@ -1,11 +1,5 @@
 <template>
   <h3>Notion Page Content</h3>
-  <button
-    class="send-to-phone"
-    @click.prevent="onClickSend(singlePageContent.content)"
-  >
-    Send to Phone
-  </button>
   <div v-if="singlePageContent" class="page-content-wrapper">
     <h3>Title: {{ singlePageContent.name }}</h3>
     <div
@@ -29,8 +23,6 @@
 <script setup>
 import useState from '@/composables/state'
 import { useRoute } from 'vue-router'
-import { selectRandomIndex } from '@/utils/index.js'
-import { postSMS } from '@/services/EventService.js'
 import { watch, ref } from 'vue'
 
 const router = useRoute()
@@ -46,47 +38,10 @@ watch(pages, (newPages) => {
     (page) => page.id === router.params.id
   )[0]
 })
-
-async function onClickSend(pagecontent) {
-  let body = pagecontent.filter((block) => block.type == 'paragraph')
-  let i = selectRandomIndex(body)
-  let text = body[i]
-
-  let textcontent = text.paragraph.rich_text[0].plain_text
-  while (textcontent.length < 300) {
-    if (i >= body.length - 1) {
-      break
-    } else {
-      i += 1
-      textcontent = textcontent.concat(
-        '...',
-        body[i].paragraph.rich_text[0].plain_text
-      )
-    }
-  }
-  await postSMS({
-    body: textcontent,
-  })
-}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.send-to-phone {
-  width: fit-content;
-  margin: 10px;
-  padding: 2px 10px 2px 10px;
-  background-color: rgb(255, 191, 0);
-  text-decoration: none;
-  border-radius: 4px;
-  border: none;
-}
-
-.send-to-phone:hover {
-  transition: ease-in-out 500ms;
-  background-color: rgb(16, 188, 207);
-  cursor: pointer;
-}
 .page-content {
   padding: 20px;
   margin: 20px;

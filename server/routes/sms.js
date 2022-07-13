@@ -27,4 +27,11 @@ async function sendNewSMS(text) {
   return response
 }
 
+// receive SMS
+
+client
+  .incomingPhoneNumbers('+16037241036')
+  .update({ smsUrl: 'https://test-1337.twil.io/my-test-function' })
+  .then((phoneNumber) => console.log(phoneNumber.smsUrl))
+
 module.exports = router

@@ -1,7 +1,9 @@
 <template>
   <div class="nav">
-    <router-link class="router" to="/">Home</router-link>
-    <router-link class="router" to="/pagelist">Page List</router-link>
+    <router-link class="router" to="/"
+      ><img src="./assets/notion_app_logo.png"
+    /></router-link>
+    <router-link class="router" to="/pagelist">Pages</router-link>
   </div>
   <router-view />
 </template>
@@ -18,6 +20,10 @@ body {
   margin: 0;
 }
 
+img {
+  max-height: 24px;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -26,12 +32,10 @@ body {
   color: #130444;
   min-height: 100vh;
   background-color: #ffffff;
-  border: -10px;
 }
 
 .nav {
   display: flex;
-
   background-color: antiquewhite;
   width: 100%;
 }

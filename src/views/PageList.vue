@@ -4,8 +4,7 @@
   <div v-if="loaded" class="page-list-wrapper">
     <div class="posts" v-for="page in pages" :key="page.id">
       <div class="post">
-        {{ `The page title is: ${page.name}` }}
-        {{ page.id }}
+        {{ page.name }}
         <button class="see-more-button" @click="onClickGetContent(page.id)">
           See More
         </button>
@@ -50,8 +49,14 @@ function onClickGetContent(id) {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.page-list-wrapper {
+  display: flex wrap;
+  flex-direction: row;
+}
 .posts {
   color: rgb(31, 62, 62);
+  display: flex wrap;
+  flex-direction: row;
 }
 .post {
   padding: 20px;
