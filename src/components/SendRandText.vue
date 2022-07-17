@@ -42,7 +42,7 @@ function onClickPickRandomPage() {
   )
   let i = selectRandomIndex(textOnlyContent)
   let textcontent = textOnlyContent[i].paragraph.rich_text[0].text.content
-  let replyBlockId = textOnlyContent[i].id
+  let blockId = textOnlyContent[i].id
 
   while (textcontent.length < 300) {
     if (i >= textOnlyContent.length - 1) {
@@ -54,11 +54,11 @@ function onClickPickRandomPage() {
         textOnlyContent[i].paragraph.rich_text[0].text.content
       )
     }
-    replyBlockId = textOnlyContent[i].id
+    blockId = textOnlyContent[i].id
   }
   postSMS({
     body: randomPage.name.concat(': ', textcontent),
-    id: replyBlockId,
+    blockId: blockId,
   })
 }
 </script>

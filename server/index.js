@@ -7,15 +7,11 @@ This is the server that we make requests *to* from our axios http request in ser
 
 require('dotenv').config()
 
-const cron = require('node-cron')
-
 const express = require('express')
 const cors = require('cors')
 const port = process.env.PORT || 5000
 
 const ngrok = require('ngrok')
-
-// const mongoose = require('mongoose')
 
 const app = express()
 
@@ -35,11 +31,6 @@ app.use('/pagescontent', pagescontent)
 app.use('/sms', sms)
 app.use('/receivesms', receivesms)
 
-// @SHANE - the id is query param that should be retrieved here
-sms.get('/sms', (req, res) => {
-  console.log(`from app.get ${req.query.id}`)
-  console.log(`from app.get ${res}`)
-})
 // run server
 
 app.listen(port, () => {
@@ -60,11 +51,3 @@ ngrok.connect(
     }
   }
 )
-
-const cronJob = (fn) => {
-  cron.schedule('* * * * *', fn)
-}
-
-cronJob(() => {
-  console.log('cron is running every minute')
-})

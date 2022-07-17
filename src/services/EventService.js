@@ -20,6 +20,18 @@ async function postPagesEvent(title) {
 
 async function postSMS(body) {
   let res = await axios.post(`http://localhost:3000/sms?id=${body.id}`, body)
+  let message = {
+    messageSid: res.data,
+    blockId: body.blockId,
+    text: body.body,
+    createdAt: new Date(),
+  }
+  await postMessagesToDb(message)
+  return res.data
+}
+
+async function postMessagesToDb(message) {
+  let res = await axios.post('http://localhost:3000/sms/db', message)
   return res.data
 }
 
