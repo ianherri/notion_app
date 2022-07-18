@@ -2,6 +2,7 @@
   "name": "notion_app",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "start": "node server/index.js",
     "serve": "vue-cli-service serve",
