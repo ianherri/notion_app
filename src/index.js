@@ -1,6 +1,11 @@
 import useState from './composables/state.js'
 import { selectRandomIndex } from './utils/index.js'
 import { postSMS } from './services/EventService.js'
+import cron from 'node-cron'
+
+const cronJob = (fn) => {
+  cron.schedule('* * * * *', fn)
+}
 
 const { pages, loadPages } = useState()
 
@@ -53,4 +58,7 @@ async function sendText() {
   })
 }
 
-sendText()
+cronJob(() => {
+  console.log('running every 12 hours')
+  sendText()
+})
