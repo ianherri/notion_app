@@ -8,12 +8,11 @@ import {
   getPagesEvent,
   postPagesEvent,
 } from '../services/EventService.js'
-import { ref, onMounted } from 'vue'
 import { isParagraph, filterForNonEmptyText } from '../utils/index.js'
 
 // ----------- state variables ----------------
-const pages = ref([{ id: '', name: '', content: [] }])
-const loaded = ref(false)
+const pages = [{ id: '', name: '', content: [] }]
+const loaded = false
 
 async function loadPages() {
   const newPages = await getPagesEvent()
@@ -78,13 +77,7 @@ async function addPage(title) {
  *
  * @returns {*} app state
  */
-export default function useState() {
-  onMounted(async () => {
-    if (!loaded.value) {
-      await loadPages()
-      loaded.value = true
-    }
-  })
 
+export default function useState() {
   return { pages, loadPages, addPage, loaded, loadPageContent }
 }

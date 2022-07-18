@@ -12,7 +12,6 @@ const mongodb = require('mongodb')
 const uri = process.env.MONGODB_URI
 
 // store sms to db
-//
 
 router.post('/db', async (req, res) => {
   const messages = await loadMessagesCollection()
