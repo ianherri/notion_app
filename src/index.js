@@ -1,4 +1,4 @@
-import useState from './composables/nonvuestate.js'
+import useState from './composables/state.js'
 import { selectRandomIndex } from './utils/index.js'
 import { postSMS } from './services/EventService.js'
 

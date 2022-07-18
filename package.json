@@ -4,37 +4,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node server/index.js",
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "start": "node server/index.js"
   },
   "dependencies": {
-    "@notionhq/client": "^1.0.4",
-    "@vue/composition-api": "^1.6.3",
-    "axios": "^0.27.2",
-    "core-js": "^3.8.3",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.1",
-    "express": "^4.18.1",
-    "g": "^2.0.1",
-    "mongodb": "^4.8.0",
-    "ngrok": "^4.3.1",
-    "node-cron": "^3.0.1",
-    "nodemon": "^2.0.18",
-    "twilio": "^3.78.0",
-    "vue": "^3.2.13",
-    "vue-router": "^4.0.16"
+    "axios": "^0.27.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
-    "@vue/cli-plugin-babel": "~5.0.0",
-    "@vue/cli-plugin-eslint": "~5.0.0",
-    "@vue/cli-service": "~5.0.0",
     "dotenv-webpack": "^7.1.1",
-    "eslint": "^7.32.0",
-    "eslint-plugin-vue": "^8.0.3"
+    "eslint": "^7.32.0"
   },
   "eslintConfig": {
     "root": true,
