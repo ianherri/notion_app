@@ -1,58 +1,59 @@
-import useState from './composables/state.js'
-import { selectRandomIndex } from './utils/index.js'
-import { postSMS } from './services/EventService.js'
-import cron from 'node-cron'
+require('dotenv').config()
+
+const main = require('./main')
+
+const cron = require('node-cron')
+
+const express = require('express')
+const cors = require('cors')
+const port = process.env.PORT || 5000
+
+const ngrok = require('ngrok')
+
+const app = express()
+
+const sendText = main.sendText
+
+//middleware
+
+app.use(cors())
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+const pagesRoute = require('./routes/pages.js')
+const pagescontentRoute = require('./routes/pagescontent')
+const smsRoute = require('./routes/sms.js')
+const receivesmsRoute = require('./routes/receivesms.js')
+
+app.use('/pages', pagesRoute)
+app.use('/pagescontent', pagescontentRoute)
+app.use('/sms', smsRoute)
+app.use('/receivesms', receivesmsRoute)
+
+// run server
+
+app.listen(port, () => {
+  console.log(`server running at ${port}`)
+})
+
+ngrok.connect(
+  {
+    proto: 'http',
+    addr: process.env.PORT,
+  },
+  (err, url) => {
+    if (err) {
+      console.error(
+        `Error while connecting to Ngrok ${err} here is the url ${url}`
+      )
+      return new Error('Ngrok Failed')
+    }
+  }
+)
 
 const cronJob = (fn) => {
-  cron.schedule('0 7 * * *', fn)
+  console.log('cron running...')
+  cron.schedule('1 7 * * *', fn)
 }
 
-const { pages, loadPages } = useState()
-
-loadPages()
-
-async function sendText() {
-  await loadPages()
-
-  function pickPage() {
-    let pageIndex = selectRandomIndex(pages.value)
-    const randomPage = pages.value[pageIndex]
-
-    if (
-      randomPage.content[0].type === 'paragraph' &&
-      randomPage.content[0].paragraph.rich_text[0].text.content === 'no content'
-    ) {
-      return pickPage()
-    } else {
-      return randomPage
-    }
-  }
-
-  const randomPage = pickPage()
-
-  let textOnlyContent = randomPage.content.filter(
-    (block) => block.type === 'paragraph'
-  )
-  let i = selectRandomIndex(textOnlyContent)
-  let textcontent = textOnlyContent[i].paragraph.rich_text[0].text.content
-  let blockId = textOnlyContent[i].id
-
-  while (textcontent.length < 300) {
-    if (i >= textOnlyContent.length - 1) {
-      break
-    } else {
-      i += 1
-      textcontent = textcontent.concat(
-        '...',
-        textOnlyContent[i].paragraph.rich_text[0].text.content
-      )
-    }
-    blockId = textOnlyContent[i].id
-  }
-  postSMS({
-    body: randomPage.name.concat(': ', textcontent),
-    blockId: blockId,
-  })
-}
-
-sendText()
+cronJob(sendText)

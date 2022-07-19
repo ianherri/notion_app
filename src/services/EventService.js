@@ -5,7 +5,7 @@ We call this event service in our state mgmt component
 
 // TODO: move the api urls to environment variables, or other variables that can be globally changed
 
-import axios from 'axios'
+const axios = require('axios')
 
 async function postPagesEvent(title) {
   let res = await axios
@@ -62,4 +62,9 @@ async function getPagesContentEvent(id) {
 
 // TODO: event that use patch endpoint at SMS
 
-export { getPagesContentEvent, getPagesEvent, postPagesEvent, postSMS }
+module.exports = {
+  getPagesContentEvent,
+  getPagesEvent,
+  postPagesEvent,
+  postSMS,
+}

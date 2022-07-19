@@ -32,4 +32,4 @@ function filterForNonEmptyText(page) {
   }
 }
 
-export { selectRandomIndex, isParagraph, filterForNonEmptyText }
+module.exports = { selectRandomIndex, isParagraph, filterForNonEmptyText }

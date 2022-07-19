@@ -3,12 +3,14 @@ Simple state mgmt code calls the Event Service to retrieve data from backend.
 Import this anywhere we need access to state
 */
 
-import {
-  getPagesContentEvent,
-  getPagesEvent,
-  postPagesEvent,
-} from '../services/EventService.js'
-import { isParagraph, filterForNonEmptyText } from '../utils/index.js'
+const EventService = require('../services/EventService.js')
+const Utils = require('../utils/index.js')
+
+const isParagraph = Utils.isParagraph
+const filterForNonEmptyText = Utils.filterForNonEmptyText
+const getPagesContentEvent = EventService.getPagesContentEvent
+const getPagesEvent = EventService.getPagesEvent
+const postPagesEvent = EventService.postPagesEvent
 
 // ----------- state variables ----------------
 const pages = [{ id: '', name: '', content: [] }]
@@ -77,6 +79,4 @@ async function addPage(title) {
  * @returns {*} app state
  */
 
-export default function useState() {
-  return { pages, loadPages, addPage, loadPageContent }
-}
+module.exports = { pages, loadPages, addPage, loadPageContent }
