@@ -4,7 +4,7 @@ import { postSMS } from './services/EventService.js'
 import cron from 'node-cron'
 
 const cronJob = (fn) => {
-  cron.schedule('* * * * *', fn)
+  cron.schedule('0 7 * * *', fn)
 }
 
 const { pages, loadPages } = useState()
@@ -13,12 +13,11 @@ loadPages()
 
 async function sendText() {
   await loadPages()
-  console.log(pages.value)
 
   function pickPage() {
     let pageIndex = selectRandomIndex(pages.value)
     const randomPage = pages.value[pageIndex]
-    console.log(randomPage.id)
+
     if (
       randomPage.content[0].type === 'paragraph' &&
       randomPage.content[0].paragraph.rich_text[0].text.content === 'no content'
@@ -30,8 +29,6 @@ async function sendText() {
   }
 
   const randomPage = pickPage()
-
-  console.log(randomPage)
 
   let textOnlyContent = randomPage.content.filter(
     (block) => block.type === 'paragraph'
@@ -58,7 +55,4 @@ async function sendText() {
   })
 }
 
-cronJob(() => {
-  console.log('running every 12 hours')
-  sendText()
-})
+sendText()

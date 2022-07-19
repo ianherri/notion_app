@@ -7,6 +7,13 @@ const axios = require('axios')
 const mongodb = require('mongodb')
 const uri = process.env.MONGODB_URI
 
+// create endpoint with sms status
+router.post('/status', async (req, res) => {
+  // req.body.SmsSid has the sid here
+  console.log(`from twilio ${JSON.stringify(req.body)}`)
+  res.status(201).send()
+})
+
 // this is an endpoint that Twilio will hit with the text content...
 
 router.post('/', async (req, res) => {

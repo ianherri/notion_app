@@ -32,24 +32,24 @@ async function loadMessagesCollection() {
   return client.db('notion-reminders-app').collection('messages')
 }
 
-// send an sms via post
-
+// TODO: is the response here === message.sid?
 router.post('/', async (req, res) => {
-  console.log(req)
-  await sendNewSMS(req.body)
+  let response = await sendNewSMS(req.body)
   res.status(201).send()
+  return response
 })
 
-// @SHANE - the id is also here in case this is easier to store
+// TODO: is the 'response' here the message.sid value?
 async function sendNewSMS(text) {
-  console.log(`from sendNewSMS ${text.blockId}`)
-  const response = await client.messages
+  let response = await client.messages
     .create({
       body: text.body,
       from: outBoundNum,
       to: '+16037241036',
+      statusCallback:
+        'https://f82b-2603-8080-1303-97e4-563-efb4-caaa-af18.ngrok.io/receivesms/status',
     })
-    .then((message) => console.log(`from sendNewSMS ${message.sid}`))
+    .then((message) => message.sid)
   return response
 }
 

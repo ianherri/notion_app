@@ -8,8 +8,6 @@ We call this event service in our state mgmt component
 import axios from 'axios'
 
 async function postPagesEvent(title) {
-  // i think the title is being transformed here
-  console.log(`from postpages event ${title.body}`)
   let res = await axios
     .post('http://localhost:3000/pages', title)
     .catch((error) => {
@@ -21,18 +19,21 @@ async function postPagesEvent(title) {
 async function postSMS(body) {
   let res = await axios.post(`http://localhost:3000/sms?id=${body.id}`, body)
   let message = {
+    //TODO: is res.data the message sid returned from the post request to the endpoint above?
+    // the endpoint is /sms
     messageSid: res.data,
     blockId: body.blockId,
     text: body.body,
     createdAt: new Date(),
   }
-  await postMessagesToDb(message)
-  return res.data
+  postMessagesToDb(message)
 }
 
+// res not defined....
 async function postMessagesToDb(message) {
-  let res = await axios.post('http://localhost:3000/sms/db', message)
-  return res.data
+  await axios.post('http://localhost:3000/sms/db', message).catch((error) => {
+    console.log(error.toJSON())
+  })
 }
 
 /**
@@ -43,7 +44,6 @@ async function getPagesEvent() {
   let res = await axios.get('http://localhost:3000/pages').catch((error) => {
     console.log(error.toJSON())
   })
-
   return res.data
 }
 
