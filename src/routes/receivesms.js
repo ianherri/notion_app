@@ -34,7 +34,7 @@ async function postResponse(body) {
   const content = { content: body }
 
   let res = await axios
-    .patch(`http://localhost:3000/pagescontent?id=${id}`, content)
+    .patch(`http://localhost:${PORT}/pagescontent?id=${id}`, content)
     .catch((error) => {
       console.log(error.toJSON())
     })
