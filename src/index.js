@@ -52,8 +52,8 @@ ngrok.connect(
 )
 
 const cronJob = (fn) => {
-  console.log('cron running every minute')
-  cron.schedule('* * * * *', fn)
+  console.log('cron running...')
+  cron.schedule('1 7 * * *', fn)
 }
 
 cronJob(sendText)
