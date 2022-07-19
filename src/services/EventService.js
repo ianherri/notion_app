@@ -4,12 +4,14 @@ We call this event service in our state mgmt component
 */
 
 // TODO: move the api urls to environment variables, or other variables that can be globally changed
+require('dotenv').config()
 
+const port = process.env.PORT || 5000
 const axios = require('axios')
 
 async function postPagesEvent(title) {
   let res = await axios
-    .post('http://localhost:3000/pages', title)
+    .post(`http://localhost:${port}/pages`, title)
     .catch((error) => {
       console.log(error.toJSON())
     })
@@ -17,7 +19,7 @@ async function postPagesEvent(title) {
 }
 
 async function postSMS(body) {
-  let res = await axios.post(`http://localhost:3000/sms?id=${body.id}`, body)
+  let res = await axios.post(`http://localhost:${port}/sms?id=${body.id}`, body)
   let message = {
     //TODO: is res.data the message sid returned from the post request to the endpoint above?
     // the endpoint is /sms
@@ -31,9 +33,11 @@ async function postSMS(body) {
 
 // res not defined....
 async function postMessagesToDb(message) {
-  await axios.post('http://localhost:3000/sms/db', message).catch((error) => {
-    console.log(error.toJSON())
-  })
+  await axios
+    .post(`http://localhost:${port}/sms/db`, message)
+    .catch((error) => {
+      console.log(error.toJSON())
+    })
 }
 
 /**
@@ -41,7 +45,7 @@ async function postMessagesToDb(message) {
  * @returns list of pages from a database
  */
 async function getPagesEvent() {
-  let res = await axios.get('http://localhost:3000/pages').catch((error) => {
+  let res = await axios.get(`http://localhost:${port}/pages`).catch((error) => {
     console.log(error.toJSON())
   })
   return res.data
@@ -53,7 +57,7 @@ async function getPagesEvent() {
  */
 async function getPagesContentEvent(id) {
   let res = await axios
-    .get(`http://localhost:3000/pagescontent?id=${id}`)
+    .get(`http://localhost:${port}/pagescontent?id=${id}`)
     .catch((error) => {
       console.log(error.toJSON())
     })
