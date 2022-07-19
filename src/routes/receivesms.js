@@ -7,6 +7,8 @@ const axios = require('axios')
 const mongodb = require('mongodb')
 const uri = process.env.MONGODB_URI
 
+const port = process.env.PORT || 5000
+
 // create endpoint with sms status
 router.post('/status', async (req, res) => {
   // req.body.SmsSid has the sid here
@@ -34,7 +36,7 @@ async function postResponse(body) {
   const content = { content: body }
 
   let res = await axios
-    .patch(`http://localhost:${PORT}/pagescontent?id=${id}`, content)
+    .patch(`http://localhost:${port}/pagescontent?id=${id}`, content)
     .catch((error) => {
       console.log(error.toJSON())
     })
