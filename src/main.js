@@ -7,8 +7,6 @@ const pages = useState.pages
 const selectRandomIndex = Utils.selectRandomIndex
 const postSMS = EventService.postSMS
 
-loadPages()
-
 async function sendText() {
   await loadPages()
 
