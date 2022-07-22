@@ -1,5 +1,7 @@
 require('dotenv').config()
 
+const { isReceivingText } = require('./routes/receivesms.js')
+
 const main = require('./main')
 
 const cron = require('node-cron')
@@ -23,12 +25,12 @@ app.use(express.urlencoded({ extended: true }))
 const pagesRoute = require('./routes/pages.js')
 const pagescontentRoute = require('./routes/pagescontent')
 const smsRoute = require('./routes/sms.js')
-const receivesmsRoute = require('./routes/receivesms.js')
+const { router } = require('./routes/receivesms.js')
 
 app.use('/pages', pagesRoute)
 app.use('/pagescontent', pagescontentRoute)
 app.use('/sms', smsRoute)
-app.use('/receivesms', receivesmsRoute)
+app.use('/receivesms', router)
 
 // run server
 
@@ -51,4 +53,10 @@ ngrok.connect(
   }
 )
 
-sendText()
+//  if there is a request coming to receivesms endpointt
+// do notthing
+// else, sendtext()
+
+if (!isReceivingText) {
+  sendText()
+}

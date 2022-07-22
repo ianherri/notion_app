@@ -9,17 +9,21 @@ const uri = process.env.MONGODB_URI
 
 const port = process.env.PORT || 5000
 
-// create endpoint with sms status
+let isReceivingText = false
+
+// create endpoint to receive sms status
 router.post('/status', async (req, res) => {
   // req.body.SmsSid has the sid here
   console.log(`from twilio ${JSON.stringify(req.body)}`)
   res.status(201).send()
 })
 
-// this is an endpoint that Twilio will hit with the text content...
-
+// this is an endpoint that Twilio will hit with the text content when user replies to text
+// it retrieves most recent database entry
+// then makes a patch request to /pagescontent with content body
 router.post('/', async (req, res) => {
   let msgBody = req.body.Body
+  isReceivingText = true
   console.log(`from twilio ${JSON.stringify(req.body)}`)
   await postResponse(msgBody)
   res.status(201).send()
@@ -51,4 +55,4 @@ async function loadMessagesCollection() {
   return client.db('notion-reminders-app').collection('messages')
 }
 
-module.exports = router
+module.exports = { router, isReceivingText }
