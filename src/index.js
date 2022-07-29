@@ -56,7 +56,8 @@ ngrok.connect(
 //  if there is a request coming to receivesms endpointt
 // do notthing
 // else, sendtext()
-
+// value of isReceivingTextt set to false most of the time
+// mutated inside the endpoint that receives texts from twilio
 if (!isReceivingText) {
   sendText()
 }
